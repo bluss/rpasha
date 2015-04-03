@@ -1,4 +1,3 @@
-use std::num::Float;
 
 /// Smooth out the vision circle by fuzzing the radius a bit
 const RADIUS_FUDGE: f32 = 0.33;
@@ -151,7 +150,7 @@ impl<F> Iterator for RPAPartialShadowcasting<F> where
 
         // check visibility vs prev obstructions.
         // preserve the same visible_when rule as in the discrete case
-        let mut opacity = 0.;
+        let mut opacity: f32 = 0.;
         let mut near_vis = true;
         let mut center_vis = true;
         let mut far_vis = true;
@@ -184,7 +183,7 @@ impl<F> Iterator for RPAPartialShadowcasting<F> where
 /// The iterator computes the near, center, far angles for each square.
 ///
 /// Note: May visit a few coordinates twice.
-#[derive(Clone, Show)]
+#[derive(Clone, Debug)]
 struct CircleIter<T> {
     /// This is cleared every time we switch octant.
     pub obstructions: Vec<(f32, f32, T)>,
@@ -271,7 +270,7 @@ impl<T> Iterator for CircleIter<T>
             (self.r * qx, self.x * qy)
         };
 
-        if Float::hypot(a as f32, b as f32) >= RADIUS_FUDGE + self.radius as f32 {
+        if (a as f32).hypot(b as f32) >= RADIUS_FUDGE + self.radius as f32 {
             self.x += 1;
             return self.next();
         }
